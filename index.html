@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link rel="icon" type="image/x-icon" href="Images/MK.png">
+	<title>MK</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        background-color: #f5f5f5;
+      }
+      
+      img {
+        width: 170px;
+        position: absolute;
+        cursor: pointer;
+        transition: left 0.1s ease, top 0.1s ease;
+	  }
+    </style>
+  </head>
+   <h1>Open to get money bby! (MK) </h1>
+  <body style="background-color:#ADD8E6";>
+    <a target="_blank" href="Images/luy.jpg">
+	<img src="Images/ap.png" alt="Ang Pao" id="avoidingImage">
+	</a>
+
+    <script>
+      const img = document.getElementById('avoidingImage');
+      
+      function centerImage() {
+        img.style.left = (window.innerWidth / 2 - img.width / 2) + 'px';
+        img.style.top = (window.innerHeight / 2 - img.height / 2) + 'px';
+      }
+      
+      window.onload = centerImage;
+      
+      window.addEventListener('resize', centerImage);
+      
+      let mouseX = -1000;
+      let mouseY = -1000;
+      
+      document.addEventListener('mousemove', function(e) {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+      });
+      
+      function updatePosition() {
+        const imgRect = img.getBoundingClientRect();
+        const imgCenterX = imgRect.left + imgRect.width / 2;
+        const imgCenterY = imgRect.top + imgRect.height / 2;
+        
+        const dx = mouseX - imgCenterX;
+        const dy = mouseY - imgCenterY;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        
+        const avoidanceRadius = Math.max(imgRect.width, imgRect.height) * 1.2;
+        
+        if (distance < avoidanceRadius) {
+          const angle = Math.atan2(dy, dx);
+          
+          const moveFactor = Math.max(0.3, (avoidanceRadius - distance) / avoidanceRadius);
+          const jumpDistance = 100 * moveFactor;
+          
+          let moveX = -Math.cos(angle) * jumpDistance;
+          let moveY = -Math.sin(angle) * jumpDistance;
+          
+          let currentX = parseInt(img.style.left) || imgRect.left;
+          let currentY = parseInt(img.style.top) || imgRect.top;
+          
+          let newX = currentX + moveX;
+          let newY = currentY + moveY;
+          
+          const padding = 10;
+          newX = Math.max(padding, Math.min(window.innerWidth - imgRect.width - padding, newX));
+          newY = Math.max(padding, Math.min(window.innerHeight - imgRect.height - padding, newY));
+          
+          img.style.left = newX + 'px';
+          img.style.top = newY + 'px';
+        }
+        
+        requestAnimationFrame(updatePosition);
+      }
+      
+      updatePosition();
+    </script>
+  </body>
+</html>
